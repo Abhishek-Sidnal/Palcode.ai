@@ -20,11 +20,10 @@ const OAuthCallback = ({ setToken }) => {
                 const response = await axios.post(`${baseUrl}/youtube/auth-callback`, { code });
                 const { access_token } = response.data;
 
-                console.log("Access token received:", access_token);
                 setToken(access_token);
                 localStorage.setItem("token", access_token);
 
-                navigate("/"); // Redirect to dashboard
+                navigate("/");
             } catch (err) {
                 console.error("Error exchanging code for token:", err.response?.data || err.message);
             }
@@ -33,7 +32,7 @@ const OAuthCallback = ({ setToken }) => {
         fetchToken();
     }, [setToken, navigate]);
 
-    return <div>Loading...</div>;
+    return <div className="text-white flex justify-center items-center h-screen text-2xl font-bold capitalize"> Loading...</div>;
 };
 
 export default OAuthCallback;
