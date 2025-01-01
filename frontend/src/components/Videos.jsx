@@ -11,7 +11,7 @@ const Videos = () => {
     <div
       className={`fixed top-0 md:relative ${
         isVideoSidebarOpen ? "right-0" : "-right-full"
-      } transition-all duration-300 min-w-[240px] sm:min-w-[300px] md:min-w-[300px] w-1/6 h-screen bg-[#27272f] p-4 md:block md:right-0 rounded-lg shadow-lg text-white`}
+      } transition-all duration-300 min-w-[240px] sm:min-w-[300px] md:min-w-[300px] w-1/6 h-screen bg-[#27272f] p-4 md:block md:right-0 rounded-lg shadow-lg text-white overflow-auto custom-scrollbar`}
     >
       <div className="flex justify-between items-center pb-4 border-b border-gray-700">
         <h2 className="text-xl font-semibold">

@@ -9,12 +9,15 @@ const DraggablePlaylistCard = ({
   setLayout,
   onClick,
 }) => {
-  const [, ref] = useDrag({
+  const [{ isDragging }, dragRef] = useDrag({
     type: "PLAYLIST_CARD",
     item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
-  const [, drop] = useDrop({
+  const [{ isOver }, dropRef] = useDrop({
     accept: "PLAYLIST_CARD",
     hover: (draggedItem) => {
       if (draggedItem.index !== index) {
@@ -25,14 +28,20 @@ const DraggablePlaylistCard = ({
         draggedItem.index = index;
       }
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   });
 
   if (!playlist) return null;
 
   return (
     <div
-      ref={(node) => ref(drop(node))}
-      className="bg-gray-500 shadow-md rounded-xl overflow-hidden  hover:shadow-lg transition-shadow duration-300 cursor-pointer relative p-1 "
+      ref={(node) => dragRef(dropRef(node))}
+      className={`bg-gray-500 shadow-md rounded-xl overflow-hidden transition-shadow duration-300 cursor-pointer relative p-1 
+        ${isDragging ? "opacity-50 border-2 border-blue-500" : ""}
+        ${isOver ? "border-2 border-green-500 shadow-lg" : ""}
+      `}
       onClick={onClick}
     >
       <img
