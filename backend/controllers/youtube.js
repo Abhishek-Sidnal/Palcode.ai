@@ -5,13 +5,13 @@ const Playlist = require("../models/Playlist");
 const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    "http://localhost:3000/oauth-callback"
+    `${process.env.ORIGIN}/oauth-callback`
 );
 
 exports.getAuthUrl = (req, res) => {
     const scopes = [
         "https://www.googleapis.com/auth/youtube.readonly",
-        "https://www.googleapis.com/auth/userinfo.email", 
+        "https://www.googleapis.com/auth/userinfo.email",
     ];
     const url = oauth2Client.generateAuthUrl({ access_type: "offline", scope: scopes, prompt: "consent" });
     res.json({ url });
@@ -53,7 +53,7 @@ exports.getUserPlaylists = async (req, res) => {
         }
 
         for (const playlist of playlists) {
-           
+
             const videoResponse = await youtube.playlistItems.list({
                 part: "snippet,contentDetails",
                 playlistId: playlist.id,
@@ -68,13 +68,13 @@ exports.getUserPlaylists = async (req, res) => {
             });
 
             const videos = videoDetailsResponse.data.items.map((video) => {
-                const duration = video.contentDetails.duration; 
+                const duration = video.contentDetails.duration;
                 return {
                     videoId: video.id,
                     title: video.snippet.title,
                     description: video.snippet.description,
                     thumbnails: video.snippet.thumbnails,
-                    duration: duration, 
+                    duration: duration,
                 };
             });
 
@@ -83,7 +83,7 @@ exports.getUserPlaylists = async (req, res) => {
                 {
                     ...playlist,
                     userId,
-                    videos, 
+                    videos,
                     lastUpdated: new Date(),
                 },
                 { upsert: true }
@@ -99,10 +99,10 @@ exports.getUserPlaylists = async (req, res) => {
 
 exports.getUserPlaylist = async (req, res) => {
     try {
-        const userId = req.user.id; 
+        const userId = req.user.id;
         console.log(`Fetching playlists for user: ${userId}`);
 
-        const playlists = await Playlist.find({ userId }).select("-__v"); 
+        const playlists = await Playlist.find({ userId }).select("-__v");
         res.json(playlists);
     } catch (err) {
         console.error("Error fetching user playlists:", err.message);
