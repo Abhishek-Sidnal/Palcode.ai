@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const OAuthCallback = ({ setToken }) => {
     const navigate = useNavigate();
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -16,7 +17,7 @@ const OAuthCallback = ({ setToken }) => {
             }
 
             try {
-                const response = await axios.post("http://localhost:5000/api/youtube/auth-callback", { code });
+                const response = await axios.post(`${baseUrl}/youtube/auth-callback`, { code });
                 const { access_token } = response.data;
 
                 console.log("Access token received:", access_token);
