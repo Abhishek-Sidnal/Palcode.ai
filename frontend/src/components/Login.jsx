@@ -10,6 +10,7 @@ const Login = ({ setToken, token }) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const validateEmail = (email) => email.includes("@");
 
@@ -24,7 +25,7 @@ const Login = ({ setToken, token }) => {
     }
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/send-otp", { email });
+      await axios.post(`${baseUrl}/auth/send-otp`, { email });
       setIsOtpSent(true);
       toast.success("OTP sent to your email!");
     } catch (err) {
@@ -43,10 +44,10 @@ const Login = ({ setToken, token }) => {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/verify-otp",
-        { email, otp }
-      );
+      const response = await axios.post(`${baseUrl}/auth/verify-otp`, {
+        email,
+        otp,
+      });
 
       const { token, user } = response.data;
 
